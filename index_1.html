@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法语动词变位练习</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1B1F2B;
+    --surface:#242A3A;
+    --surface-2:#2C3346;
+    --surface-3:#333c53;
+    --text:#ECE8DF;
+    --text-dim:#9AA2B5;
+    --accent-gold:#E3AE4E;
+    --accent-gold-dim:#8a763c;
+    --accent-green:#6FBF8B;
+    --accent-red:#C7594B;
+    --border:#3A4256;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    padding:28px 16px 60px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+
+  header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  header h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:22px;
+    margin:0;
+    letter-spacing:0.2px;
+  }
+  header h1 span{color:var(--accent-gold);font-style:italic;font-weight:500;}
+
+  .mode-switch{
+    display:flex;
+    gap:6px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:3px;
+  }
+  .mode-switch button{
+    border:none;
+    background:transparent;
+    color:var(--text-dim);
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    padding:7px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .mode-switch button.active{
+    background:var(--surface-3);
+    color:var(--text);
+  }
+
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:16px;
+  }
+
+  /* ---- practice card ---- */
+  .practice-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+    color:var(--text-dim);
+    margin-bottom:18px;
+  }
+  .practice-meta .tag{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    padding:3px 9px;
+    border-radius:6px;
+    font-size:12px;
+  }
+  .stats-line{display:flex;gap:14px;}
+  .stats-line b{color:var(--text);}
+
+  .prompt{
+    text-align:center;
+    padding:26px 10px 8px;
+  }
+  .prompt .inf{
+    font-size:15px;
+    color:var(--text-dim);
+    margin-bottom:6px;
+  }
+  .prompt .inf b{color:var(--accent-gold);font-weight:600;}
+  .prompt .pronoun-line{
+    font-family:'Fraunces',serif;
+    font-size:34px;
+    font-weight:500;
+  }
+  .prompt .pronoun-line .blank{
+    display:inline-block;
+    min-width:120px;
+    border-bottom:2px solid var(--accent-gold-dim);
+    margin-left:6px;
+  }
+
+  .answer-row{
+    display:flex;
+    gap:10px;
+    margin:22px 0 6px;
+  }
+  .answer-row input{
+    flex:1;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    color:var(--text);
+    font-family:'Fraunces',serif;
+    font-size:20px;
+    padding:12px 16px;
+    outline:none;
+  }
+  .answer-row input:focus{border-color:var(--accent-gold-dim);}
+  .answer-row button.submit{
+    background:var(--accent-gold);
+    border:none;
+    color:#211a08;
+    font-weight:700;
+    font-size:14px;
+    padding:0 22px;
+    border-radius:10px;
+    cursor:pointer;
+  }
+  .answer-row button.submit:disabled{opacity:.5;cursor:default;}
+
+  .accent-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:6px;
+  }
+  .accent-row button{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-family:'Fraunces',serif;
+    font-size:14px;
+    width:30px;height:30px;
+    border-radius:7px;
+    cursor:pointer;
+  }
+  .accent-row button:hover{color:var(--text);border-color:var(--accent-gold-dim);}
+
+  .feedback{
+    min-height:70px;
+    margin-top:14px;
+    padding:14px 16px;
+    border-radius:10px;
+    font-size:14px;
+    display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.correct{background:rgba(111,191,139,.12); border:1px solid rgba(111,191,139,.4); color:var(--accent-green);}
+  .feedback.wrong{background:rgba(199,89,75,.12); border:1px solid rgba(199,89,75,.4); color:#e6a99e;}
+  .feedback .correct-answer{color:var(--text);font-weight:600;font-family:'Fraunces',serif;font-size:16px;}
+  .feedback .note{color:var(--text-dim);font-size:12px;margin-top:6px;}
+
+  .util-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top:14px;
+    gap:8px;
+  }
+  .util-row button{
+    background:none;
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-family:inherit;
+    font-size:12.5px;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .util-row button:hover{color:var(--text);border-color:var(--accent-gold-dim);}
+
+  /* ---- filters panel ---- */
+  .filters h3{
+    font-size:13px;
+    color:var(--text-dim);
+    text-transform:none;
+    margin:0 0 10px;
+    font-weight:600;
+  }
+  .chip-group{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+  .chip{
+    border:1px solid var(--border);
+    background:var(--surface-2);
+    color:var(--text-dim);
+    font-size:12.5px;
+    padding:7px 12px;
+    border-radius:20px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .chip.on{
+    background:rgba(227,174,78,.14);
+    border-color:var(--accent-gold-dim);
+    color:var(--accent-gold);
+  }
+  .filters .toggle-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-top:1px solid var(--border);
+    padding-top:14px;
+    font-size:13px;
+  }
+  .switch{
+    position:relative;width:40px;height:22px;
+    background:var(--surface-2);border:1px solid var(--border);border-radius:20px;cursor:pointer;
+  }
+  .switch.on{background:rgba(227,174,78,.25);border-color:var(--accent-gold-dim);}
+  .switch .knob{
+    position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;
+    background:var(--text-dim);transition:left .15s, background .15s;
+  }
+  .switch.on .knob{left:20px;background:var(--accent-gold);}
+  .mistake-count{color:var(--accent-red);font-weight:600;}
+
+  /* ---- table mode ---- */
+  select{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text);
+    font-family:inherit;
+    font-size:14px;
+    padding:9px 12px;
+    border-radius:9px;
+    width:100%;
+    margin-bottom:16px;
+  }
+  .verb-badge{
+    display:inline-block;
+    font-size:11.5px;
+    color:var(--text-dim);
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    padding:2px 8px;
+    border-radius:6px;
+    margin-left:8px;
+  }
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{padding:8px 6px;text-align:left;border-bottom:1px solid var(--border);}
+  th{color:var(--text-dim);font-weight:600;font-size:12px;}
+  td.person{color:var(--text-dim);width:70px;}
+  .table-scroll{overflow-x:auto;}
+  .table-scroll table{min-width:760px;}
+  caption{caption-side:bottom;text-align:left;color:var(--text-dim);font-size:11.5px;padding-top:10px;}
+
+  footer{
+    text-align:center;
+    color:var(--text-dim);
+    font-size:12px;
+    margin-top:24px;
+  }
+
+  .frow{display:flex;flex-wrap:wrap;align-items:center;column-gap:10px;row-gap:2px;margin-bottom:10px;}
+  .frow .lbl{width:84px;color:var(--text-dim);font-size:14px;flex-shrink:0;}
+  .frow input{flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Fraunces',serif;font-size:18px;padding:9px 12px;outline:none;}
+  .frow input:focus{border-color:var(--accent-gold-dim);}
+  .frow.ok input{border-color:var(--accent-green);}
+  .frow.bad input{border-color:var(--accent-red);}
+  .frow .ans{flex-basis:100%;padding-left:94px;font-family:'Fraunces',serif;color:var(--accent-green);font-size:14px;}
+  .btn-gold{background:var(--accent-gold);border:none;color:#211a08;font-weight:700;font-size:14px;padding:11px 20px;border-radius:10px;cursor:pointer;font-family:inherit;}
+  .btn-gold:disabled{opacity:.5;cursor:default;}
+  .btn-ghost{background:none;border:1px solid var(--border);color:var(--text-dim);font-size:13px;padding:10px 16px;border-radius:10px;cursor:pointer;font-family:inherit;}
+  .btn-ghost:hover{color:var(--text);border-color:var(--accent-gold-dim);}
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mode-switch" id="module-switch" style="margin-bottom:16px;">
+    <button id="btn-module-verbs" class="active">动词变位</button>
+    <button id="btn-module-vocab">背单词</button>
+  </div>
+
+  <div id="module-verbs">
+
+  <header>
+    <h1>动词变位<span>练习</span></h1>
+    <div class="mode-switch">
+      <button id="btn-mode-practice" class="active">练习</button>
+      <button id="btn-mode-focus">专项</button>
+      <button id="btn-mode-table">查表</button>
+    </div>
+  </header>
+
+  <!-- PRACTICE MODE -->
+  <div id="view-practice">
+    <div class="panel">
+      <div class="practice-meta">
+        <span class="tag" id="meta-tense">—</span>
+        <div class="stats-line">
+          <span>连对 <b id="stat-streak">0</b></span>
+          <span>正确率 <b id="stat-acc">—</b></span>
+        </div>
+      </div>
+
+      <div class="prompt">
+        <div class="inf"><b id="prompt-pronoun">tu</b> · <span id="prompt-inf">aller</span></div>
+        <div class="pronoun-line"><span id="prompt-verb-hint"></span><span class="blank"></span></div>
+      </div>
+
+      <div class="answer-row">
+        <input id="answer-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入变位形式…">
+        <button class="submit" id="btn-submit">提交</button>
+      </div>
+
+      <div class="accent-row" id="accent-row"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <div class="util-row" id="util-row-before">
+        <button id="btn-show">显示答案</button>
+        <button id="btn-skip">跳过 →</button>
+      </div>
+      <div class="util-row" id="util-row-after" style="display:none;">
+        <button id="btn-next" style="flex:1;background:var(--accent-gold);border:none;color:#211a08;font-weight:700;">下一题 →</button>
+      </div>
+    </div>
+
+    <div class="panel filters">
+      <h3>时态</h3>
+      <div class="chip-group" id="tense-chips"></div>
+      <h3>动词类型</h3>
+      <div class="chip-group" id="group-chips"></div>
+      <div class="toggle-row">
+        <span>只练错题本 <span class="mistake-count" id="mistake-count">(0)</span></span>
+        <div class="switch" id="toggle-mistakes"><div class="knob"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE MODE -->
+  <div id="view-focus" style="display:none;">
+    <div class="panel">
+      <select id="focus-verb"></select>
+      <select id="focus-tense"></select>
+      <div class="accent-row" id="focus-accent-row"></div>
+      <div id="focus-area"></div>
+    </div>
+  </div>
+
+  <div id="view-table" style="display:none;">
+    <div class="panel">
+      <select id="verb-select"></select>
+      <div class="table-scroll">
+        <table id="conj-table"></table>
+      </div>
+    </div>
+  </div>
+
+  <footer>虚拟式过去时 / 愈过去时暂未收录 · 复合过去时中 être 动词的分词以阳性单数形式显示，实际需按主语性数配合</footer>
+  </div>
+
+  <!-- ================= VOCAB MODULE ================= -->
+  <div id="module-vocab" style="display:none;">
+
+    <header>
+      <h1>背<span>单词</span></h1>
+      <div class="mode-switch">
+        <button id="btn-vocab-practice" class="active">练习</button>
+        <button id="btn-vocab-bank">词库</button>
+        <button id="btn-vocab-import">拍照导入</button>
+      </div>
+    </header>
+
+    <div id="vocab-view-practice">
+      <div class="panel">
+        <div class="practice-meta">
+          <span class="tag" id="vocab-meta-level">—</span>
+          <div class="stats-line">
+            <span>连对 <b id="vocab-stat-streak">0</b></span>
+            <span>正确率 <b id="vocab-stat-acc">—</b></span>
+          </div>
+        </div>
+
+        <div class="prompt">
+          <div class="inf" id="vocab-direction-label">法语 → 中文</div>
+          <div class="pronoun-line" id="vocab-word-display">—</div>
+        </div>
+
+        <div class="chip-group" id="vocab-gender-row" style="display:none;justify-content:center;margin:14px 0;">
+          <div class="chip" data-g="m" style="font-size:16px;padding:10px 22px;">le</div>
+          <div class="chip" data-g="f" style="font-size:16px;padding:10px 22px;">la</div>
+        </div>
+
+        <div class="answer-row" id="vocab-answer-row">
+          <input id="vocab-answer-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入答案…">
+          <button class="submit" id="vocab-btn-submit">提交</button>
+        </div>
+
+        <div class="accent-row" id="vocab-accent-row"></div>
+
+        <div class="feedback" id="vocab-feedback"></div>
+
+        <div class="util-row" id="vocab-util-before">
+          <button id="vocab-btn-show">显示答案</button>
+          <button id="vocab-btn-skip">跳过 →</button>
+        </div>
+        <div class="util-row" id="vocab-util-after" style="display:none;">
+          <button id="vocab-btn-next" style="flex:1;background:var(--accent-gold);border:none;color:#211a08;font-weight:700;">下一题 →</button>
+        </div>
+      </div>
+
+      <div class="panel filters">
+        <h3>方向</h3>
+        <div class="chip-group" id="vocab-direction-chips">
+          <div class="chip on" data-dir="fr2zh">法语 → 中文</div>
+          <div class="chip" data-dir="zh2fr">中文 → 法语</div>
+        </div>
+        <h3>等级</h3>
+        <div class="chip-group" id="vocab-level-chips"></div>
+        <div class="toggle-row">
+          <span>只练错题本 <span class="mistake-count" id="vocab-mistake-count">(0)</span></span>
+          <div class="switch" id="vocab-toggle-mistakes"><div class="knob"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="vocab-view-import" style="display:none;">
+      <div class="panel">
+        <div style="font-size:13px;color:var(--text-dim);margin-bottom:14px;line-height:1.6;">拍下课本/词汇表（可多张），Claude 会识别单词、阴阳性和中文释义，你勾选确认后加入词库。识别会用到你自己的 Claude 额度。</div>
+        <h3 style="font-size:13px;color:var(--text-dim);margin:0 0 10px;font-weight:600;">加入到哪个等级</h3>
+        <div class="chip-group" id="import-level-chips"></div>
+        <input type="file" id="import-file" accept="image/*" multiple style="width:100%;margin-bottom:12px;color:var(--text-dim);font-size:13px;">
+        <button class="btn-gold" id="import-btn" style="width:100%;">识别单词</button>
+        <div id="import-status" style="font-size:13px;color:var(--text-dim);margin:12px 0;"></div>
+        <div id="import-preview"></div>
+        <button class="btn-gold" id="import-add" style="width:100%;margin-top:14px;display:none;"></button>
+      </div>
+    </div>
+
+    <div id="vocab-view-bank" style="display:none;">
+      <div class="panel">
+        <input id="vocab-search" type="text" placeholder="搜索单词…" style="width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px;padding:9px 12px;border-radius:9px;margin-bottom:14px;">
+        <div class="table-scroll">
+          <table id="vocab-bank-table"></table>
+        </div>
+      </div>
+    </div>
+
+    <footer>专四词汇为议论文/时事常考高阶词与连接词，并非官方逐字考纲词表；可在「拍照导入」里直接拍课本或词汇书，识别后加进词库</footer>
+  </div>
+
+</div>
+
+<script>
+/* ============ DATA ============ */
+const PERSONS = ['je','tu','il / elle','nous','vous','ils / elles'];
+const IMPERATIF_PERSONS = ['(tu)','(nous)','(vous)'];
+const TENSE_LABELS = {
+  present: '现在时 · présent',
+  passeCompose: '复合过去时 · passé composé',
+  imparfait: '未完成过去时 · imparfait',
+  futur: '简单将来时 · futur simple',
+  conditionnel: '条件式现在时 · conditionnel présent',
+  subjonctif: '虚拟式现在时 · subjonctif présent',
+  imperatif: '命令式 · impératif'
+};
+const TENSE_ORDER = ['present','passeCompose','imparfait','futur','conditionnel','subjonctif','imperatif'];
+
+const AUX_PRESENT = {
+  avoir: ['ai','as','a','avons','avez','ont'],
+  etre:  ['suis','es','est','sommes','êtes','sont']
+};
+
+// Irregular verbs, fully hand-specified.
+const IRREGULAR = [
+ {inf:'être', aux:'avoir', pp:'été', present:['suis','es','est','sommes','êtes','sont'], imparfait:['étais','étais','était','étions','étiez','étaient'], futur:['serai','seras','sera','serons','serez','seront'], conditionnel:['serais','serais','serait','serions','seriez','seraient'], subjonctif:['sois','sois','soit','soyons','soyez','soient'], imperatif:['sois','soyons','soyez']},
+ {inf:'avoir', aux:'avoir', pp:'eu', present:['ai','as','a','avons','avez','ont'], imparfait:['avais','avais','avait','avions','aviez','avaient'], futur:['aurai','auras','aura','aurons','aurez','auront'], conditionnel:['aurais','aurais','aurait','aurions','auriez','auraient'], subjonctif:['aie','aies','ait','ayons','ayez','aient'], imperatif:['aie','ayons','ayez']},
+ {inf:'faire', aux:'avoir', pp:'fait', present:['fais','fais','fait','faisons','faites','font'], imparfait:['faisais','faisais','faisait','faisions','faisiez','faisaient'], futur:['ferai','feras','fera','ferons','ferez','feront'], conditionnel:['ferais','ferais','ferait','ferions','feriez','feraient'], subjonctif:['fasse','fasses','fasse','fassions','fassiez','fassent'], imperatif:['fais','faisons','faites']},
+ {inf:'aller', aux:'etre', pp:'allé', present:['vais','vas','va','allons','allez','vont'], imparfait:['allais','allais','allait','allions','alliez','allaient'], futur:['irai','iras','ira','irons','irez','iront'], conditionnel:['irais','irais','irait','irions','iriez','iraient'], subjonctif:['aille','ailles','aille','allions','alliez','aillent'], imperatif:['va','allons','allez']},
+ {inf:'dire', aux:'avoir', pp:'dit', present:['dis','dis','dit','disons','dites','disent'], imparfait:['disais','disais','disait','disions','disiez','disaient'], futur:['dirai','diras','dira','dirons','direz','diront'], conditionnel:['dirais','dirais','dirait','dirions','diriez','diraient'], subjonctif:['dise','dises','dise','disions','disiez','disent'], imperatif:['dis','disons','dites']},
+ {inf:'pouvoir', aux:'avoir', pp:'pu', present:['peux','peux','peut','pouvons','pouvez','peuvent'], imparfait:['pouvais','pouvais','pouvait','pouvions','pouviez','pouvaient'], futur:['pourrai','pourras','pourra','pourrons','pourrez','pourront'], conditionnel:['pourrais','pourrais','pourrait','pourrions','pourriez','pourraient'], subjonctif:['puisse','puisses','puisse','puissions','puissiez','puissent'], imperatif:null},
+ {inf:'vouloir', aux:'avoir', pp:'voulu', present:['veux','veux','veut','voulons','voulez','veulent'], imparfait:['voulais','voulais','voulait','voulions','vouliez','voulaient'], futur:['voudrai','voudras','voudra','voudrons','voudrez','voudront'], conditionnel:['voudrais','voudrais','voudrait','voudrions','voudriez','voudraient'], subjonctif:['veuille','veuilles','veuille','voulions','vouliez','veuillent'], imperatif:['veuille','veuillons','veuillez']},
+ {inf:'devoir', aux:'avoir', pp:'dû', present:['dois','dois','doit','devons','devez','doivent'], imparfait:['devais','devais','devait','devions','deviez','devaient'], futur:['devrai','devras','devra','devrons','devrez','devront'], conditionnel:['devrais','devrais','devrait','devrions','devriez','devraient'], subjonctif:['doive','doives','doive','devions','deviez','doivent'], imperatif:null},
+ {inf:'prendre', aux:'avoir', pp:'pris', present:['prends','prends','prend','prenons','prenez','prennent'], imparfait:['prenais','prenais','prenait','prenions','preniez','prenaient'], futur:['prendrai','prendras','prendra','prendrons','prendrez','prendront'], conditionnel:['prendrais','prendrais','prendrait','prendrions','prendriez','prendraient'], subjonctif:['prenne','prennes','prenne','prenions','preniez','prennent'], imperatif:['prends','prenons','prenez']},
+ {inf:'venir', aux:'etre', pp:'venu', present:['viens','viens','vient','venons','venez','viennent'], imparfait:['venais','venais','venait','venions','veniez','venaient'], futur:['viendrai','viendras','viendra','viendrons','viendrez','viendront'], conditionnel:['viendrais','viendrais','viendrait','viendrions','viendriez','viendraient'], subjonctif:['vienne','viennes','vienne','venions','veniez','viennent'], imperatif:['viens','venons','venez']},
+ {inf:'voir', aux:'avoir', pp:'vu', present:['vois','vois','voit','voyons','voyez','voient'], imparfait:['voyais','voyais','voyait','voyions','voyiez','voyaient'], futur:['verrai','verras','verra','verrons','verrez','verront'], conditionnel:['verrais','verrais','verrait','verrions','verriez','verraient'], subjonctif:['voie','voies','voie','voyions','voyiez','voient'], imperatif:['vois','voyons','voyez']},
+ {inf:'savoir', aux:'avoir', pp:'su', present:['sais','sais','sait','savons','savez','savent'], imparfait:['savais','savais','savait','savions','saviez','savaient'], futur:['saurai','sauras','saura','saurons','saurez','sauront'], conditionnel:['saurais','saurais','saurait','saurions','sauriez','sauraient'], subjonctif:['sache','saches','sache','sachions','sachiez','sachent'], imperatif:['sache','sachons','sachez']},
+ {inf:'mettre', aux:'avoir', pp:'mis', present:['mets','mets','met','mettons','mettez','mettent'], imparfait:['mettais','mettais','mettait','mettions','mettiez','mettaient'], futur:['mettrai','mettras','mettra','mettrons','mettrez','mettront'], conditionnel:['mettrais','mettrais','mettrait','mettrions','mettriez','mettraient'], subjonctif:['mette','mettes','mette','mettions','mettiez','mettent'], imperatif:['mets','mettons','mettez']},
+ {inf:'partir', aux:'etre', pp:'parti', present:['pars','pars','part','partons','partez','partent'], imparfait:['partais','partais','partait','partions','partiez','partaient'], futur:['partirai','partiras','partira','partirons','partirez','partiront'], conditionnel:['partirais','partirais','partirait','partirions','partiriez','partiraient'], subjonctif:['parte','partes','parte','partions','partiez','partent'], imperatif:['pars','partons','partez']},
+ {inf:'connaître', aux:'avoir', pp:'connu', present:['connais','connais','connaît','connaissons','connaissez','connaissent'], imparfait:['connaissais','connaissais','connaissait','connaissions','connaissiez','connaissaient'], futur:['connaîtrai','connaîtras','connaîtra','connaîtrons','connaîtrez','connaîtront'], conditionnel:['connaîtrais','connaîtrais','connaîtrait','connaîtrions','connaîtriez','connaîtraient'], subjonctif:['connaisse','connaisses','connaisse','connaissions','connaissiez','connaissent'], imperatif:['connais','connaissons','connaissez']},
+ {inf:'boire', aux:'avoir', pp:'bu', present:['bois','bois','boit','buvons','buvez','boivent'], imparfait:['buvais','buvais','buvait','buvions','buviez','buvaient'], futur:['boirai','boiras','boira','boirons','boirez','boiront'], conditionnel:['boirais','boirais','boirait','boirions','boiriez','boiraient'], subjonctif:['boive','boives','boive','buvions','buviez','boivent'], imperatif:['bois','buvons','buvez']},
+];
+
+// spelling-change -er verbs, hand-specified
+const SPELLING_ER = [
+ {inf:'manger', aux:'avoir', pp:'mangé', group:'ER', present:['mange','manges','mange','mangeons','mangez','mangent'], imparfait:['mangeais','mangeais','mangeait','mangions','mangiez','mangeaient'], futur:['mangerai','mangeras','mangera','mangerons','mangerez','mangeront'], conditionnel:['mangerais','mangerais','mangerait','mangerions','mangeriez','mangeraient'], subjonctif:['mange','manges','mange','mangions','mangiez','mangent'], imperatif:['mange','mangeons','mangez']},
+ {inf:'commencer', aux:'avoir', pp:'commencé', group:'ER', present:['commence','commences','commence','commençons','commencez','commencent'], imparfait:['commençais','commençais','commençait','commencions','commenciez','commençaient'], futur:['commencerai','commenceras','commencera','commencerons','commencerez','commenceront'], conditionnel:['commencerais','commencerais','commencerait','commencerions','commenceriez','commenceraient'], subjonctif:['commence','commences','commence','commencions','commenciez','commencent'], imperatif:['commence','commençons','commencez']},
+];
+
+// regular verbs generated by rule: {inf, group: 'ER'|'IR'|'RE', aux}
+const REGULAR_LIST = [
+  {inf:'parler', group:'ER', aux:'avoir'},
+  {inf:'aimer', group:'ER', aux:'avoir'},
+  {inf:'habiter', group:'ER', aux:'avoir'},
+  {inf:'chercher', group:'ER', aux:'avoir'},
+  {inf:'travailler', group:'ER', aux:'avoir'},
+  {inf:'regarder', group:'ER', aux:'avoir'},
+  {inf:'écouter', group:'ER', aux:'avoir'},
+  {inf:'donner', group:'ER', aux:'avoir'},
+  {inf:'trouver', group:'ER', aux:'avoir'},
+  {inf:'jouer', group:'ER', aux:'avoir'},
+  {inf:'arriver', group:'ER', aux:'etre'},
+  {inf:'rester', group:'ER', aux:'etre'},
+  {inf:'finir', group:'IR', aux:'avoir'},
+  {inf:'choisir', group:'IR', aux:'avoir'},
+  {inf:'réussir', group:'IR', aux:'avoir'},
+  {inf:'grandir', group:'IR', aux:'avoir'},
+  {inf:'remplir', group:'IR', aux:'avoir'},
+  {inf:'vendre', group:'RE', aux:'avoir'},
+  {inf:'attendre', group:'RE', aux:'avoir'},
+  {inf:'répondre', group:'RE', aux:'avoir'},
+  {inf:'perdre', group:'RE', aux:'avoir'},
+  {inf:'entendre', group:'RE', aux:'avoir'},
+];
+
+function conjugateRegular(inf, group){
+  let stem;
+  const out = {};
+  if(group === 'ER'){
+    stem = inf.slice(0,-2);
+    out.present = [stem+'e',stem+'es',stem+'e',stem+'ons',stem+'ez',stem+'ent'];
+    out.imparfait = [stem+'ais',stem+'ais',stem+'ait',stem+'ions',stem+'iez',stem+'aient'];
+    out.futur = [inf+'ai',inf+'as',inf+'a',inf+'ons',inf+'ez',inf+'ont'];
+    out.conditionnel = [inf+'ais',inf+'ais',inf+'ait',inf+'ions',inf+'iez',inf+'aient'];
+    out.subjonctif = [stem+'e',stem+'es',stem+'e',stem+'ions',stem+'iez',stem+'ent'];
+    out.pp = stem+'é';
+    out.imperatif = [stem+'e',stem+'ons',stem+'ez'];
+  } else if(group === 'IR'){
+    stem = inf.slice(0,-2);
+    out.present = [stem+'is',stem+'is',stem+'it',stem+'issons',stem+'issez',stem+'issent'];
+    out.imparfait = [stem+'issais',stem+'issais',stem+'issait',stem+'issions',stem+'issiez',stem+'issaient'];
+    out.futur = [inf+'ai',inf+'as',inf+'a',inf+'ons',inf+'ez',inf+'ont'];
+    out.conditionnel = [inf+'ais',inf+'ais',inf+'ait',inf+'ions',inf+'iez',inf+'aient'];
+    out.subjonctif = [stem+'isse',stem+'isses',stem+'isse',stem+'issions',stem+'issiez',stem+'issent'];
+    out.pp = stem+'i';
+    out.imperatif = [stem+'is',stem+'issons',stem+'issez'];
+  } else if(group === 'RE'){
+    stem = inf.slice(0,-2);
+    const futurStem = inf.slice(0,-1);
+    out.present = [stem+'s',stem+'s',stem,stem+'ons',stem+'ez',stem+'ent'];
+    out.imparfait = [stem+'ais',stem+'ais',stem+'ait',stem+'ions',stem+'iez',stem+'aient'];
+    out.futur = [futurStem+'ai',futurStem+'as',futurStem+'a',futurStem+'ons',futurStem+'ez',futurStem+'ont'];
+    out.conditionnel = [futurStem+'ais',futurStem+'ais',futurStem+'ait',futurStem+'ions',futurStem+'iez',futurStem+'aient'];
+    out.subjonctif = [stem+'e',stem+'es',stem+'e',stem+'ions',stem+'iez',stem+'ent'];
+    out.pp = stem+'u';
+    out.imperatif = [stem+'s',stem+'ons',stem+'ez'];
+  }
+  return out;
+}
+
+const ALL_VERBS = [];
+IRREGULAR.forEach(v => ALL_VERBS.push({...v, group:'IRR'}));
+SPELLING_ER.forEach(v => ALL_VERBS.push(v));
+REGULAR_LIST.forEach(v => {
+  const c = conjugateRegular(v.inf, v.group);
+  ALL_VERBS.push({inf:v.inf, aux:v.aux, group:v.group, ...c});
+});
+
+function passeComposeForm(verb, personIdx){
+  return AUX_PRESENT[verb.aux][personIdx] + ' ' + verb.pp;
+}
+
+const GROUP_LABELS = {IRR:'不规则动词', ER:'规则 -er', IR:'规则 -ir', RE:'规则 -re'};
+
+/* ============ STATE ============ */
+let state = {
+  tenses: {present:true, passeCompose:true, imparfait:true, futur:true, conditionnel:true, subjonctif:true, imperatif:true},
+  groups: {IRR:true, ER:true, IR:true, RE:true},
+  onlyMistakes: false,
+  streak: 0,
+  correctCount: 0,
+  totalCount: 0,
+  current: null // {verb, tense, personIdx}
+};
+let mistakes = {}; // key: inf|tense|personIdx -> count
+
+const STORAGE_KEY = 'french-conj-mistakes-v1';
+
+async function loadMistakes(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ mistakes = JSON.parse(raw); }
+  }catch(e){ /* storage unavailable or empty */ }
+  updateMistakeCount();
+}
+async function saveMistakes(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(mistakes)); }catch(e){}
+}
+function mistakeKey(verb, tense, personIdx){ return verb.inf+'|'+tense+'|'+personIdx; }
+function updateMistakeCount(){
+  document.getElementById('mistake-count').textContent = '(' + Object.keys(mistakes).length + ')';
+}
+
+/* ============ FILTER UI ============ */
+const tenseChipsEl = document.getElementById('tense-chips');
+TENSE_ORDER.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'chip on';
+  chip.textContent = TENSE_LABELS[t].split(' · ')[0];
+  chip.dataset.tense = t;
+  chip.onclick = () => {
+    state.tenses[t] = !state.tenses[t];
+    chip.classList.toggle('on', state.tenses[t]);
+    if(Object.values(state.tenses).every(v=>!v)){ state.tenses[t]=true; chip.classList.add('on'); }
+  };
+  tenseChipsEl.appendChild(chip);
+});
+
+const groupChipsEl = document.getElementById('group-chips');
+Object.keys(GROUP_LABELS).forEach(g => {
+  const chip = document.createElement('div');
+  chip.className = 'chip on';
+  chip.textContent = GROUP_LABELS[g];
+  chip.onclick = () => {
+    state.groups[g] = !state.groups[g];
+    chip.classList.toggle('on', state.groups[g]);
+    if(Object.values(state.groups).every(v=>!v)){ state.groups[g]=true; chip.classList.add('on'); }
+  };
+  groupChipsEl.appendChild(chip);
+});
+
+const mistakesToggle = document.getElementById('toggle-mistakes');
+mistakesToggle.onclick = () => {
+  state.onlyMistakes = !state.onlyMistakes;
+  mistakesToggle.classList.toggle('on', state.onlyMistakes);
+  nextQuestion();
+};
+
+/* ============ ACCENT KEYBOARD ============ */
+const ACCENTS = ['é','è','ê','ë','à','â','ù','û','ï','î','ô','ç','œ'];
+const accentRow = document.getElementById('accent-row');
+ACCENTS.forEach(ch => {
+  const btn = document.createElement('button');
+  btn.textContent = ch;
+  btn.onclick = () => {
+    const input = document.getElementById('answer-input');
+    const start = input.selectionStart, end = input.selectionEnd;
+    input.value = input.value.slice(0,start) + ch + input.value.slice(end);
+    input.focus();
+    input.selectionStart = input.selectionEnd = start+1;
+  };
+  accentRow.appendChild(btn);
+});
+
+/* ============ PRACTICE LOGIC ============ */
+function buildPool(){
+  const activeTenses = TENSE_ORDER.filter(t => state.tenses[t]);
+  const activeGroups = Object.keys(state.groups).filter(g => state.groups[g]);
+  const verbs = ALL_VERBS.filter(v => activeGroups.includes(v.group));
+  const pool = [];
+  verbs.forEach(v => {
+    activeTenses.forEach(t => {
+      const persons = t === 'imperatif' ? [0,1,2] : [0,1,2,3,4,5];
+      if(t === 'imperatif' && !v.imperatif) return;
+      persons.forEach(pIdx => {
+        if(state.onlyMistakes){
+          const key = mistakeKey(v, t, pIdx);
+          if(mistakes[key]) pool.push({verb:v, tense:t, personIdx:pIdx, weight: mistakes[key]});
+        } else {
+          pool.push({verb:v, tense:t, personIdx:pIdx, weight:1});
+        }
+      });
+    });
+  });
+  return pool;
+}
+
+function weightedPick(pool){
+  const total = pool.reduce((s,i)=>s+i.weight,0);
+  let r = Math.random()*total;
+  for(const item of pool){
+    r -= item.weight;
+    if(r<=0) return item;
+  }
+  return pool[pool.length-1];
+}
+
+function expectedAnswer(item){
+  const {verb, tense, personIdx} = item;
+  if(tense === 'imperatif') return verb.imperatif[personIdx];
+  if(tense === 'passeCompose') return passeComposeForm(verb, personIdx);
+  return verb[tense][personIdx];
+}
+
+function nextQuestion(){
+  const feedback = document.getElementById('feedback');
+  feedback.className = 'feedback';
+  feedback.innerHTML = '';
+  document.getElementById('answer-input').value = '';
+  document.getElementById('answer-input').disabled = false;
+  document.getElementById('btn-submit').disabled = false;
+  document.getElementById('util-row-before').style.display = '';
+  document.getElementById('util-row-after').style.display = 'none';
+
+  const pool = buildPool();
+  if(pool.length === 0){
+    document.getElementById('prompt-inf').textContent = state.onlyMistakes ? '暂无错题，切换回全部练习吧' : '请至少选择一个时态/类型';
+    document.getElementById('prompt-pronoun').textContent = '—';
+    document.getElementById('meta-tense').textContent = '—';
+    state.current = null;
+    return;
+  }
+  const item = weightedPick(pool);
+  state.current = item;
+  const personLabel = item.tense === 'imperatif' ? IMPERATIF_PERSONS[item.personIdx] : PERSONS[item.personIdx];
+  document.getElementById('prompt-pronoun').textContent = personLabel;
+  document.getElementById('prompt-inf').textContent = item.verb.inf;
+  document.getElementById('meta-tense').textContent = TENSE_LABELS[item.tense];
+  document.getElementById('answer-input').focus();
+}
+
+function normalize(s){
+  return s.trim().toLowerCase().replace(/\s+/g,' ');
+}
+
+function submitAnswer(reveal){
+  if(!state.current) return;
+  const item = state.current;
+  const input = document.getElementById('answer-input');
+  const feedback = document.getElementById('feedback');
+  const correct = expectedAnswer(item);
+  const userVal = input.value;
+  const isCorrect = !reveal && normalize(userVal) === normalize(correct);
+
+  state.totalCount++;
+  input.disabled = true;
+  document.getElementById('btn-submit').disabled = true;
+
+  if(isCorrect){
+    state.streak++;
+    state.correctCount++;
+    feedback.className = 'feedback show correct';
+    feedback.innerHTML = '✓ 正确！';
+    const key = mistakeKey(item.verb, item.tense, item.personIdx);
+    if(mistakes[key]){ delete mistakes[key]; saveMistakes(); updateMistakeCount(); }
+  } else {
+    state.streak = 0;
+    feedback.className = 'feedback show wrong';
+    let note = '';
+    if(item.tense === 'passeCompose' && item.verb.aux === 'etre'){
+      note = '<div class="note">être 动词，分词需按主语性数配合（如 allé → allée / allés / allées）</div>';
+    }
+    feedback.innerHTML = (reveal ? '答案：' : '✗ 差一点 — 正确答案：') + '<div class="correct-answer">'+correct+'</div>' + note;
+    const key = mistakeKey(item.verb, item.tense, item.personIdx);
+    mistakes[key] = (mistakes[key]||0) + 1;
+    saveMistakes();
+    updateMistakeCount();
+  }
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-acc').textContent = state.totalCount ? Math.round(state.correctCount/state.totalCount*100)+'%' : '—';
+
+  document.getElementById('util-row-before').style.display = 'none';
+  document.getElementById('util-row-after').style.display = '';
+  document.getElementById('btn-next').focus();
+}
+
+document.getElementById('btn-submit').onclick = () => submitAnswer(false);
+document.getElementById('answer-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){
+    // Enter submits the answer, or advances to the next question if already answered
+    if(document.getElementById('util-row-after').style.display === 'none'){
+      submitAnswer(false);
+    } else {
+      nextQuestion();
+    }
+  }
+});
+document.getElementById('btn-show').onclick = () => submitAnswer(true);
+document.getElementById('btn-skip').onclick = () => nextQuestion();
+document.getElementById('btn-next').onclick = () => nextQuestion();
+document.getElementById('btn-next').addEventListener('keydown', e => {
+  if(e.key === 'Enter') nextQuestion();
+});
+
+/* ============ TABLE MODE ============ */
+const verbSelect = document.getElementById('verb-select');
+ALL_VERBS.slice().sort((a,b)=>a.inf.localeCompare(b.inf,'fr')).forEach(v => {
+  const opt = document.createElement('option');
+  opt.value = v.inf;
+  opt.textContent = v.inf + '  (' + GROUP_LABELS[v.group] + ')';
+  verbSelect.appendChild(opt);
+});
+verbSelect.onchange = renderTable;
+
+function renderTable(){
+  const verb = ALL_VERBS.find(v => v.inf === verbSelect.value);
+  const table = document.getElementById('conj-table');
+  if(!verb) return;
+  let html = '<caption>动词 “'+verb.inf+'” · 助动词 '+(verb.aux==='avoir'?'avoir':'être')+' · 过去分词 '+verb.pp+'</caption>';
+  html += '<thead><tr><th>人称</th>';
+  TENSE_ORDER.filter(t=>t!=='imperatif').forEach(t => html += '<th>'+TENSE_LABELS[t].split(' · ')[0]+'</th>');
+  html += '</tr></thead><tbody>';
+  for(let i=0;i<6;i++){
+    html += '<tr><td class="person">'+PERSONS[i]+'</td>';
+    TENSE_ORDER.filter(t=>t!=='imperatif').forEach(t => {
+      const val = t === 'passeCompose' ? passeComposeForm(verb,i) : verb[t][i];
+      html += '<td>'+val+'</td>';
+    });
+    html += '</tr>';
+  }
+  html += '</tbody>';
+  table.innerHTML = html;
+  document.querySelectorAll('.imp-block').forEach(e=>e.remove());
+
+  if(verb.imperatif){
+    let impHtml = '<div style="margin-top:16px;font-size:12.5px;color:var(--text-dim);margin-bottom:8px;">命令式 · impératif</div><table><tbody><tr>';
+    IMPERATIF_PERSONS.forEach((p,i) => {
+      impHtml += '<td class="person">'+p+'</td><td>'+verb.imperatif[i]+'</td>';
+    });
+    impHtml += '</tr></tbody></table>';
+    table.insertAdjacentHTML('afterend', '<div class="imp-block">'+impHtml+'</div>');
+  }
+}
+
+/* ============ MODE SWITCH ============ */
+const btnPractice = document.getElementById('btn-mode-practice');
+const btnTable = document.getElementById('btn-mode-table');
+btnPractice.onclick = () => {
+  btnPractice.classList.add('active'); btnTable.classList.remove('active');
+  document.getElementById('view-practice').style.display = '';
+  document.getElementById('view-table').style.display = 'none';
+};
+btnTable.onclick = () => {
+  btnTable.classList.add('active'); btnPractice.classList.remove('active');
+  document.getElementById('view-practice').style.display = 'none';
+  document.getElementById('view-table').style.display = '';
+  if(!verbSelect.value){ verbSelect.selectedIndex = 0; }
+  renderTable();
+};
+
+/* ============ TOP-LEVEL MODULE SWITCH ============ */
+const btnModVerbs = document.getElementById('btn-module-verbs');
+const btnModVocab = document.getElementById('btn-module-vocab');
+btnModVerbs.onclick = () => {
+  btnModVerbs.classList.add('active'); btnModVocab.classList.remove('active');
+  document.getElementById('module-verbs').style.display = '';
+  document.getElementById('module-vocab').style.display = 'none';
+};
+btnModVocab.onclick = () => {
+  btnModVocab.classList.add('active'); btnModVerbs.classList.remove('active');
+  document.getElementById('module-verbs').style.display = 'none';
+  document.getElementById('module-vocab').style.display = '';
+};
+
+/* ================= VOCAB MODULE ================= */
+// gender: 'm' | 'f' | null (null = not a gender-marked noun: verb/adj/adv/expr)
+const VOCAB = [
+// --- A1 ---
+{fr:'bonjour',g:null,zh:'你好',lv:'A1'},{fr:'bonsoir',g:null,zh:'晚上好',lv:'A1'},{fr:'merci',g:null,zh:'谢谢',lv:'A1'},
+{fr:'au revoir',g:null,zh:'再见',lv:'A1'},{fr:'oui',g:null,zh:'是',lv:'A1'},{fr:'non',g:null,zh:'不是',lv:'A1'},
+{fr:'maison',g:'f',zh:'房子',lv:'A1'},{fr:'homme',g:'m',zh:'男人',lv:'A1'},{fr:'femme',g:'f',zh:'女人',lv:'A1'},
+{fr:'enfant',g:'m',zh:'小孩',lv:'A1'},{fr:'ami',g:'m',zh:'朋友',lv:'A1'},{fr:'famille',g:'f',zh:'家庭',lv:'A1'},
+{fr:'père',g:'m',zh:'父亲',lv:'A1'},{fr:'mère',g:'f',zh:'母亲',lv:'A1'},{fr:'frère',g:'m',zh:'兄弟',lv:'A1'},
+{fr:'sœur',g:'f',zh:'姐妹',lv:'A1'},{fr:'livre',g:'m',zh:'书',lv:'A1'},{fr:'table',g:'f',zh:'桌子',lv:'A1'},
+{fr:'chaise',g:'f',zh:'椅子',lv:'A1'},{fr:'porte',g:'f',zh:'门',lv:'A1'},{fr:'fenêtre',g:'f',zh:'窗户',lv:'A1'},
+{fr:'voiture',g:'f',zh:'汽车',lv:'A1'},{fr:'ville',g:'f',zh:'城市',lv:'A1'},{fr:'pays',g:'m',zh:'国家',lv:'A1'},
+{fr:'eau',g:'f',zh:'水',lv:'A1'},{fr:'pain',g:'m',zh:'面包',lv:'A1'},{fr:'lait',g:'m',zh:'牛奶',lv:'A1'},
+{fr:'fromage',g:'m',zh:'奶酪',lv:'A1'},{fr:'pomme',g:'f',zh:'苹果',lv:'A1'},{fr:'café',g:'m',zh:'咖啡',lv:'A1'},
+{fr:'thé',g:'m',zh:'茶',lv:'A1'},{fr:'jour',g:'m',zh:'天，日子',lv:'A1'},{fr:'semaine',g:'f',zh:'星期',lv:'A1'},
+{fr:'mois',g:'m',zh:'月份',lv:'A1'},{fr:'année',g:'f',zh:'年',lv:'A1'},{fr:'matin',g:'m',zh:'早上',lv:'A1'},
+{fr:'soir',g:'m',zh:'晚上',lv:'A1'},{fr:'nuit',g:'f',zh:'夜晚',lv:'A1'},{fr:'école',g:'f',zh:'学校',lv:'A1'},
+{fr:'travail',g:'m',zh:'工作',lv:'A1'},{fr:'rouge',g:null,zh:'红色的',lv:'A1'},{fr:'bleu',g:null,zh:'蓝色的',lv:'A1'},
+{fr:'vert',g:null,zh:'绿色的',lv:'A1'},{fr:'noir',g:null,zh:'黑色的',lv:'A1'},{fr:'blanc',g:null,zh:'白色的',lv:'A1'},
+{fr:'grand',g:null,zh:'大的，高的',lv:'A1'},{fr:'petit',g:null,zh:'小的',lv:'A1'},{fr:'manger',g:null,zh:'吃',lv:'A1'},
+{fr:'boire',g:null,zh:'喝',lv:'A1'},{fr:'parler',g:null,zh:'说话',lv:'A1'},{fr:'habiter',g:null,zh:'居住',lv:'A1'},
+{fr:'aimer',g:null,zh:'喜欢，爱',lv:'A1'},{fr:'lundi',g:null,zh:'星期一',lv:'A1'},{fr:"aujourd'hui",g:null,zh:'今天',lv:'A1'},
+// --- A2 ---
+{fr:'travailler',g:null,zh:'工作（动词）',lv:'A2'},{fr:'étudier',g:null,zh:'学习',lv:'A2'},{fr:'apprendre',g:null,zh:'学习，学会',lv:'A2'},
+{fr:'comprendre',g:null,zh:'理解',lv:'A2'},{fr:'expliquer',g:null,zh:'解释',lv:'A2'},{fr:'voyage',g:'m',zh:'旅行',lv:'A2'},
+{fr:'voyager',g:null,zh:'旅行（动词）',lv:'A2'},{fr:'aéroport',g:'m',zh:'机场',lv:'A2'},{fr:'train',g:'m',zh:'火车',lv:'A2'},
+{fr:'avion',g:'m',zh:'飞机',lv:'A2'},{fr:'hôtel',g:'m',zh:'酒店',lv:'A2'},{fr:'restaurant',g:'m',zh:'餐厅',lv:'A2'},
+{fr:'addition',g:'f',zh:'账单',lv:'A2'},{fr:'argent',g:'m',zh:'钱',lv:'A2'},{fr:'prix',g:'m',zh:'价格',lv:'A2'},
+{fr:'magasin',g:'m',zh:'商店',lv:'A2'},{fr:'vêtement',g:'m',zh:'衣服',lv:'A2'},{fr:'chaussure',g:'f',zh:'鞋子',lv:'A2'},
+{fr:'problème',g:'m',zh:'问题',lv:'A2'},{fr:'solution',g:'f',zh:'解决办法',lv:'A2'},{fr:'santé',g:'f',zh:'健康',lv:'A2'},
+{fr:'médecin',g:'m',zh:'医生',lv:'A2'},{fr:'hôpital',g:'m',zh:'医院',lv:'A2'},{fr:'rendez-vous',g:'m',zh:'约会，预约',lv:'A2'},
+{fr:'météo',g:'f',zh:'天气预报',lv:'A2'},{fr:'pluie',g:'f',zh:'雨',lv:'A2'},{fr:'neige',g:'f',zh:'雪',lv:'A2'},
+{fr:'soleil',g:'m',zh:'太阳',lv:'A2'},{fr:'nuage',g:'m',zh:'云',lv:'A2'},{fr:'saison',g:'f',zh:'季节',lv:'A2'},
+{fr:'printemps',g:'m',zh:'春天',lv:'A2'},{fr:'été',g:'m',zh:'夏天',lv:'A2'},{fr:'automne',g:'m',zh:'秋天',lv:'A2'},
+{fr:'hiver',g:'m',zh:'冬天',lv:'A2'},{fr:'métier',g:'m',zh:'职业',lv:'A2'},{fr:'professeur',g:'m',zh:'教授，老师',lv:'A2'},
+{fr:'étudiant',g:'m',zh:'大学生',lv:'A2'},{fr:'université',g:'f',zh:'大学',lv:'A2'},{fr:'examen',g:'m',zh:'考试',lv:'A2'},
+{fr:'bibliothèque',g:'f',zh:'图书馆',lv:'A2'},{fr:'ordinateur',g:'m',zh:'电脑',lv:'A2'},{fr:'téléphone',g:'m',zh:'电话',lv:'A2'},
+{fr:'message',g:'m',zh:'信息',lv:'A2'},{fr:'lettre',g:'f',zh:'信',lv:'A2'},{fr:'banque',g:'f',zh:'银行',lv:'A2'},
+{fr:'quartier',g:'m',zh:'街区',lv:'A2'},{fr:'rue',g:'f',zh:'街道',lv:'A2'},{fr:'décider',g:null,zh:'决定',lv:'A2'},
+{fr:'espérer',g:null,zh:'希望',lv:'A2'},{fr:'proposer',g:null,zh:'提议',lv:'A2'},{fr:'continuer',g:null,zh:'继续',lv:'A2'},
+{fr:'difficile',g:null,zh:'困难的',lv:'A2'},{fr:'facile',g:null,zh:'容易的',lv:'A2'},
+// --- TFS4 (专四 · 议论文/时事常考高阶词与连接词，非官方逐字词表) ---
+{fr:'néanmoins',g:null,zh:'然而，尽管如此',lv:'TFS4'},{fr:'toutefois',g:null,zh:'然而',lv:'TFS4'},{fr:'désormais',g:null,zh:'从今以后',lv:'TFS4'},
+{fr:'autrefois',g:null,zh:'从前',lv:'TFS4'},{fr:'malgré',g:null,zh:'尽管（介词）',lv:'TFS4'},{fr:'en outre',g:null,zh:'此外',lv:'TFS4'},
+{fr:'par conséquent',g:null,zh:'因此',lv:'TFS4'},{fr:'davantage',g:null,zh:'更多',lv:'TFS4'},{fr:'autrui',g:null,zh:'他人',lv:'TFS4'},
+{fr:'guère',g:null,zh:'几乎不',lv:'TFS4'},{fr:'société',g:'f',zh:'社会',lv:'TFS4'},{fr:'économie',g:'f',zh:'经济',lv:'TFS4'},
+{fr:'politique',g:'f',zh:'政治，政策',lv:'TFS4'},{fr:'culture',g:'f',zh:'文化',lv:'TFS4'},{fr:'environnement',g:'m',zh:'环境',lv:'TFS4'},
+{fr:'phénomène',g:'m',zh:'现象',lv:'TFS4'},{fr:'conséquence',g:'f',zh:'后果',lv:'TFS4'},{fr:'avantage',g:'m',zh:'优点',lv:'TFS4'},
+{fr:'inconvénient',g:'m',zh:'缺点',lv:'TFS4'},{fr:'objectif',g:'m',zh:'目标',lv:'TFS4'},{fr:'enjeu',g:'m',zh:'关键问题，赌注',lv:'TFS4'},
+{fr:'mesure',g:'f',zh:'措施',lv:'TFS4'},{fr:'gouvernement',g:'m',zh:'政府',lv:'TFS4'},{fr:'citoyen',g:'m',zh:'公民',lv:'TFS4'},
+{fr:'croissance',g:'f',zh:'增长',lv:'TFS4'},{fr:'développement',g:'m',zh:'发展',lv:'TFS4'},{fr:'mondialisation',g:'f',zh:'全球化',lv:'TFS4'},
+{fr:'immigration',g:'f',zh:'移民（现象）',lv:'TFS4'},{fr:'chômage',g:'m',zh:'失业',lv:'TFS4'},{fr:'inégalité',g:'f',zh:'不平等',lv:'TFS4'},
+{fr:'pauvreté',g:'f',zh:'贫穷',lv:'TFS4'},{fr:'ressource',g:'f',zh:'资源',lv:'TFS4'},{fr:'durable',g:null,zh:'可持续的',lv:'TFS4'},
+{fr:'écologique',g:null,zh:'生态的',lv:'TFS4'},{fr:'technologie',g:'f',zh:'技术',lv:'TFS4'},{fr:'innovation',g:'f',zh:'创新',lv:'TFS4'},
+{fr:'identité',g:'f',zh:'身份',lv:'TFS4'},{fr:'diversité',g:'f',zh:'多样性',lv:'TFS4'},{fr:'tolérance',g:'f',zh:'包容',lv:'TFS4'},
+{fr:'solidarité',g:'f',zh:'团结',lv:'TFS4'},{fr:'liberté',g:'f',zh:'自由',lv:'TFS4'},{fr:'égalité',g:'f',zh:'平等',lv:'TFS4'},
+];
+const VOCAB_LEVELS = ['A1','A2','TFS4'];
+const VOCAB_LEVEL_LABELS = {A1:'A1', A2:'A2', TFS4:'专四'};
+
+let vState = {
+  direction: 'fr2zh',
+  levels: {A1:true, A2:true, TFS4:true},
+  onlyMistakes: false,
+  streak: 0, correct: 0, total: 0,
+  current: null,
+  genderDone: false
+};
+let vMistakes = {};
+const V_STORAGE_KEY = 'french-vocab-mistakes-v1';
+function vLoad(){ try{ const raw = localStorage.getItem(V_STORAGE_KEY); if(raw) vMistakes = JSON.parse(raw); }catch(e){} vUpdateMistakeCount(); }
+function vSave(){ try{ localStorage.setItem(V_STORAGE_KEY, JSON.stringify(vMistakes)); }catch(e){} }
+function vKey(word,dir){ return word.fr+'|'+dir; }
+function vUpdateMistakeCount(){ document.getElementById('vocab-mistake-count').textContent = '('+Object.keys(vMistakes).length+')'; }
+
+const levelChipsEl = document.getElementById('vocab-level-chips');
+VOCAB_LEVELS.forEach(lv => {
+  const chip = document.createElement('div');
+  chip.className = 'chip on';
+  chip.textContent = VOCAB_LEVEL_LABELS[lv];
+  chip.onclick = () => {
+    vState.levels[lv] = !vState.levels[lv];
+    chip.classList.toggle('on', vState.levels[lv]);
+    if(Object.values(vState.levels).every(v=>!v)){ vState.levels[lv]=true; chip.classList.add('on'); }
+  };
+  levelChipsEl.appendChild(chip);
+});
+document.querySelectorAll('#vocab-direction-chips .chip').forEach(chip => {
+  chip.onclick = () => {
+    document.querySelectorAll('#vocab-direction-chips .chip').forEach(c=>c.classList.remove('on'));
+    chip.classList.add('on');
+    vState.direction = chip.dataset.dir;
+    vNextQuestion();
+  };
+});
+document.getElementById('vocab-toggle-mistakes').onclick = function(){
+  vState.onlyMistakes = !vState.onlyMistakes;
+  this.classList.toggle('on', vState.onlyMistakes);
+  vNextQuestion();
+};
+
+const V_ACCENTS = ['é','è','ê','ë','à','â','ù','û','ï','î','ô','ç','œ'];
+const vAccentRow = document.getElementById('vocab-accent-row');
+V_ACCENTS.forEach(ch => {
+  const btn = document.createElement('button');
+  btn.textContent = ch;
+  btn.onclick = () => {
+    const input = document.getElementById('vocab-answer-input');
+    const start = input.selectionStart, end = input.selectionEnd;
+    input.value = input.value.slice(0,start) + ch + input.value.slice(end);
+    input.focus(); input.selectionStart = input.selectionEnd = start+1;
+  };
+  vAccentRow.appendChild(btn);
+});
+
+function vBuildPool(){
+  const activeLevels = VOCAB_LEVELS.filter(lv => vState.levels[lv]);
+  return VOCAB.filter(w => {
+    if(!activeLevels.includes(w.lv)) return false;
+    if(vState.onlyMistakes) return !!vMistakes[vKey(w, vState.direction)];
+    return true;
+  });
+}
+function vNormalize(s){ return s.trim().toLowerCase().replace(/\s+/g,' '); }
+
+function vNextQuestion(){
+  vState.genderDone = false;
+  const fb = document.getElementById('vocab-feedback');
+  fb.className = 'feedback'; fb.innerHTML = '';
+  const input = document.getElementById('vocab-answer-input');
+  input.value = ''; input.disabled = false;
+  document.getElementById('vocab-btn-submit').disabled = false;
+  document.getElementById('vocab-util-before').style.display = '';
+  document.getElementById('vocab-util-after').style.display = 'none';
+  document.getElementById('vocab-gender-row').style.display = 'none';
+  document.querySelectorAll('#vocab-gender-row .chip').forEach(c=>{c.classList.remove('on'); c.style.pointerEvents='';});
+
+  const pool = vBuildPool();
+  document.getElementById('vocab-direction-label').textContent = vState.direction==='fr2zh' ? '法语 → 中文' : '中文 → 法语';
+  if(pool.length === 0){
+    document.getElementById('vocab-word-display').textContent = vState.onlyMistakes ? '暂无错题' : '请至少选择一个等级';
+    document.getElementById('vocab-meta-level').textContent = '—';
+    vState.current = null;
+    return;
+  }
+  const word = pool[Math.floor(Math.random()*pool.length)];
+  vState.current = word;
+  document.getElementById('vocab-meta-level').textContent = VOCAB_LEVEL_LABELS[word.lv];
+
+  if(vState.direction === 'fr2zh'){
+    document.getElementById('vocab-word-display').textContent = word.fr;
+  } else {
+    document.getElementById('vocab-word-display').textContent = word.zh;
+  }
+  if(word.g){
+    document.getElementById('vocab-gender-row').style.display = 'flex';
+    document.getElementById('vocab-answer-row').style.display = 'none';
+  } else {
+    document.getElementById('vocab-answer-row').style.display = 'flex';
+  }
+  input.focus();
+}
+
+document.querySelectorAll('#vocab-gender-row .chip').forEach(chip => {
+  chip.onclick = () => {
+    if(vState.genderDone || !vState.current) return;
+    vState.genderDone = true;
+    const word = vState.current;
+    const ok = chip.dataset.g === word.g;
+    document.querySelectorAll('#vocab-gender-row .chip').forEach(c=>{c.style.pointerEvents='none';});
+    chip.style.borderColor = ok ? 'var(--accent-green)' : 'var(--accent-red)';
+    chip.style.color = ok ? 'var(--accent-green)' : 'var(--accent-red)';
+    const key = vKey(word,'gender');
+    if(!ok){ vMistakes[key] = (vMistakes[key]||0)+1; vSave(); vUpdateMistakeCount(); }
+    else if(vMistakes[key]){ delete vMistakes[key]; vSave(); vUpdateMistakeCount(); }
+    document.getElementById('vocab-answer-row').style.display = 'flex';
+    document.getElementById('vocab-answer-input').focus();
+  };
+});
+
+function vExpected(word){ return vState.direction==='fr2zh' ? word.zh : word.fr; }
+
+function vSubmit(reveal){
+  if(!vState.current) return;
+  const word = vState.current;
+  const input = document.getElementById('vocab-answer-input');
+  const fb = document.getElementById('vocab-feedback');
+  const expected = vExpected(word);
+  const isCorrect = !reveal && vNormalize(input.value) === vNormalize(expected);
+
+  vState.total++;
+  input.disabled = true;
+  document.getElementById('vocab-btn-submit').disabled = true;
+
+  const key = vKey(word, vState.direction);
+  if(isCorrect){
+    vState.streak++; vState.correct++;
+    fb.className = 'feedback show correct';
+    fb.innerHTML = '✓ 正确！';
+    if(vMistakes[key]){ delete vMistakes[key]; vSave(); vUpdateMistakeCount(); }
+  } else {
+    vState.streak = 0;
+    fb.className = 'feedback show wrong';
+    fb.innerHTML = (reveal?'答案：':'✗ 差一点 — 正确答案：') + '<div class="correct-answer">'+expected+'</div>';
+    vMistakes[key] = (vMistakes[key]||0)+1; vSave(); vUpdateMistakeCount();
+  }
+  document.getElementById('vocab-stat-streak').textContent = vState.streak;
+  document.getElementById('vocab-stat-acc').textContent = vState.total ? Math.round(vState.correct/vState.total*100)+'%' : '—';
+  document.getElementById('vocab-util-before').style.display = 'none';
+  document.getElementById('vocab-util-after').style.display = '';
+  document.getElementById('vocab-btn-next').focus();
+}
+document.getElementById('vocab-btn-submit').onclick = () => vSubmit(false);
+document.getElementById('vocab-answer-input').addEventListener('keydown', e => { if(e.key==='Enter') vSubmit(false); });
+document.getElementById('vocab-btn-show').onclick = () => vSubmit(true);
+document.getElementById('vocab-btn-skip').onclick = () => vNextQuestion();
+document.getElementById('vocab-btn-next').onclick = () => vNextQuestion();
+
+/* vocab word bank browse */
+const btnVocabPractice = document.getElementById('btn-vocab-practice');
+const btnVocabBank = document.getElementById('btn-vocab-bank');
+btnVocabPractice.onclick = () => {
+  btnVocabPractice.classList.add('active'); btnVocabBank.classList.remove('active');
+  document.getElementById('vocab-view-practice').style.display = '';
+  document.getElementById('vocab-view-bank').style.display = 'none';
+};
+btnVocabBank.onclick = () => {
+  btnVocabBank.classList.add('active'); btnVocabPractice.classList.remove('active');
+  document.getElementById('vocab-view-practice').style.display = 'none';
+  document.getElementById('vocab-view-bank').style.display = '';
+  vRenderBank('');
+};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function vRenderBank(filter){
+  const f = filter.trim().toLowerCase();
+  let html = '<thead><tr><th>法语</th><th>性</th><th>中文</th><th>等级</th><th></th></tr></thead><tbody>';
+  VOCAB.forEach((w,i) => {
+    if(f && !(w.fr.toLowerCase().includes(f) || w.zh.includes(f))) return;
+    html += '<tr><td>'+esc(w.fr)+'</td><td>'+(w.g==='m'?'le':w.g==='f'?'la':'—')+'</td><td>'+esc(w.zh)+'</td><td>'+VOCAB_LEVEL_LABELS[w.lv]+'</td><td>'+(w.custom?'<button class="btn-ghost" data-del="'+i+'" style="padding:2px 8px;">×</button>':'')+'</td></tr>';
+  });
+  html += '</tbody>';
+  const tb=document.getElementById('vocab-bank-table');
+  tb.innerHTML = html;
+  tb.querySelectorAll('[data-del]').forEach(btn=>btn.onclick=()=>{ VOCAB.splice(+btn.dataset.del,1); saveCustom(); vRenderBank(document.getElementById('vocab-search').value); });
+}
+document.getElementById('vocab-search').addEventListener('input', e => vRenderBank(e.target.value));
+
+/* ============ VERB FOCUS MODE (单个动词专项) ============ */
+const focusVerbSel=document.getElementById('focus-verb');
+const focusTenseSel=document.getElementById('focus-tense');
+ALL_VERBS.forEach(v=>{const o=document.createElement('option');o.value=v.inf;o.textContent=v.inf;focusVerbSel.appendChild(o);});
+focusVerbSel.value='parler';
+TENSE_ORDER.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=TENSE_LABELS[t];focusTenseSel.appendChild(o);});
+{const o=document.createElement('option');o.value='all';o.textContent='全部时态 · 混着考';focusTenseSel.appendChild(o);}
+let focusLast=null;
+document.getElementById('view-focus').addEventListener('focusin',e=>{if(e.target.tagName==='INPUT')focusLast=e.target;});
+ACCENTS.forEach(ch=>{const b=document.createElement('button');b.textContent=ch;
+  b.onmousedown=e=>e.preventDefault();
+  b.onclick=()=>{const i=focusLast;if(!i||i.disabled||!document.body.contains(i))return;const s=i.selectionStart,e2=i.selectionEnd;i.value=i.value.slice(0,s)+ch+i.value.slice(e2);i.focus();i.selectionStart=i.selectionEnd=s+1;};
+  document.getElementById('focus-accent-row').appendChild(b);});
+
+function fRecord(item,ok){const k=mistakeKey(item.verb,item.tense,item.personIdx);if(ok){if(mistakes[k]){delete mistakes[k];}}else{mistakes[k]=(mistakes[k]||0)+1;}saveMistakes();updateMistakeCount();}
+
+function focusRender(){
+  const area=document.getElementById('focus-area');area.innerHTML='';
+  const verb=ALL_VERBS.find(v=>v.inf===focusVerbSel.value),tense=focusTenseSel.value;
+  if(tense==='all')return focusMixedStart(area,verb);
+  if(tense==='imperatif'&&!verb.imperatif){area.innerHTML='<div style="color:var(--text-dim);font-size:14px;">这个动词没有常用的命令式。</div>';return;}
+  const labels=tense==='imperatif'?IMPERATIF_PERSONS:PERSONS;
+  const rows=labels.map((lb,i)=>{
+    const r=document.createElement('div');r.className='frow';
+    r.innerHTML='<span class="lbl">'+lb+'</span><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"><span class="ans"></span>';
+    area.appendChild(r);return r;});
+  const inputs=rows.map(r=>r.querySelector('input'));
+  const res=document.createElement('div');res.style.cssText='margin:6px 0 12px;font-size:14px;';
+  const bar=document.createElement('div');bar.style.cssText='display:flex;gap:8px;';
+  const chk=document.createElement('button');chk.className='btn-gold';chk.textContent='检查';chk.style.flex='1';
+  const redo=document.createElement('button');redo.className='btn-ghost';redo.textContent='重做';
+  bar.append(chk,redo);area.append(res,bar);
+  const check=()=>{let n=0;rows.forEach((r,i)=>{
+    const item={verb,tense,personIdx:i},exp=expectedAnswer(item),ok=normalize(inputs[i].value)===normalize(exp);
+    r.className='frow '+(ok?'ok':'bad');r.querySelector('.ans').textContent=ok?'':'答案：'+exp;if(ok)n++;fRecord(item,ok);});
+    res.textContent='答对 '+n+' / '+rows.length+(n===rows.length?' 🎉':'');res.style.color=n===rows.length?'var(--accent-green)':'var(--text)';};
+  chk.onclick=check;redo.onclick=focusRender;
+  inputs.forEach((inp,i)=>inp.addEventListener('keydown',e=>{if(e.key==='Enter'){if(i<inputs.length-1)inputs[i+1].focus();else check();}}));
+  inputs[0].focus();
+}
+
+let mixed=null;
+function focusMixedStart(area,verb){
+  const items=[];
+  TENSE_ORDER.forEach(t=>{if(t==='imperatif'&&!verb.imperatif)return;const n=t==='imperatif'?3:6;for(let i=0;i<n;i++)items.push({verb,tense:t,personIdx:i});});
+  for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]];}
+  mixed={queue:items,i:0,correct:0};mixedShow(area);
+}
+function mixedShow(area){
+  area.innerHTML='';
+  if(mixed.i>=mixed.queue.length){
+    area.innerHTML='<div style="text-align:center;padding:20px 0;"><div style="font-family:Fraunces,serif;font-size:26px;margin-bottom:8px;">'+mixed.correct+' / '+mixed.queue.length+'</div><div style="color:var(--text-dim);font-size:14px;margin-bottom:16px;">这一轮完成了</div></div>';
+    const again=document.createElement('button');again.className='btn-gold';again.style.width='100%';again.textContent='再来一轮';again.onclick=focusRender;area.appendChild(again);return;}
+  const it=mixed.queue[mixed.i],lb=it.tense==='imperatif'?IMPERATIF_PERSONS[it.personIdx]:PERSONS[it.personIdx];
+  area.innerHTML='<div class="practice-meta"><span class="tag">'+TENSE_LABELS[it.tense]+'</span><span>'+(mixed.i+1)+' / '+mixed.queue.length+'</span></div><div class="prompt"><div class="inf"><b>'+lb+'</b> · '+it.verb.inf+'</div></div><div class="answer-row"><input type="text" id="mx-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入变位形式…"><button class="submit" id="mx-go">提交</button></div><div class="feedback" id="mx-fb"></div><div id="mx-next" style="display:none;margin-top:12px;"></div>';
+  const inp=document.getElementById('mx-input'),fb=document.getElementById('mx-fb'),go=document.getElementById('mx-go'),nx=document.getElementById('mx-next');
+  const submit=()=>{if(inp.disabled)return;const exp=expectedAnswer(it),ok=normalize(inp.value)===normalize(exp);inp.disabled=true;go.disabled=true;
+    fb.className='feedback show '+(ok?'correct':'wrong');fb.innerHTML=ok?'✓ 正确！':'✗ 正确答案：<div class="correct-answer">'+exp+'</div>';
+    if(ok)mixed.correct++;fRecord(it,ok);
+    const nb=document.createElement('button');nb.className='btn-gold';nb.style.width='100%';nb.textContent=mixed.i+1>=mixed.queue.length?'看结果 →':'下一题 →';nb.onclick=()=>{mixed.i++;mixedShow(area);};nx.appendChild(nb);nx.style.display='';nb.focus();};
+  go.onclick=submit;inp.addEventListener('keydown',e=>{if(e.key==='Enter')submit();});inp.focus();
+}
+focusVerbSel.onchange=focusRender;focusTenseSel.onchange=focusRender;
+
+function showVerbView(name){
+  const map={practice:['btn-mode-practice','view-practice'],focus:['btn-mode-focus','view-focus'],table:['btn-mode-table','view-table']};
+  Object.entries(map).forEach(([k,[b,v]])=>{document.getElementById(b).classList.toggle('active',k===name);document.getElementById(v).style.display=k===name?'':'none';});
+  if(name==='table'){if(!verbSelect.value)verbSelect.selectedIndex=0;renderTable();}
+  if(name==='focus')focusRender();
+}
+document.getElementById('btn-mode-practice').onclick=()=>showVerbView('practice');
+document.getElementById('btn-mode-focus').onclick=()=>showVerbView('focus');
+document.getElementById('btn-mode-table').onclick=()=>showVerbView('table');
+
+/* ============ VOCAB PHOTO IMPORT ============ */
+const CUSTOM_KEY='french-vocab-custom-v1';
+function loadCustom(){try{const raw=localStorage.getItem(CUSTOM_KEY);if(raw)JSON.parse(raw).forEach(w=>VOCAB.push({fr:w.fr,g:w.g,zh:w.zh,lv:w.lv,custom:true}));}catch(e){}}
+function saveCustom(){try{localStorage.setItem(CUSTOM_KEY,JSON.stringify(VOCAB.filter(w=>w.custom).map(w=>({fr:w.fr,g:w.g,zh:w.zh,lv:w.lv}))));}catch(e){}}
+let importLevel='A1',importFound=[];
+const impChips=document.getElementById('import-level-chips');
+VOCAB_LEVELS.forEach(lv=>{const c=document.createElement('div');c.className='chip'+(lv===importLevel?' on':'');c.textContent=VOCAB_LEVEL_LABELS[lv];
+  c.onclick=()=>{importLevel=lv;[...impChips.children].forEach(x=>x.classList.toggle('on',x===c));updateImportAdd();};impChips.appendChild(c);});
+function updateImportAdd(){const n=importFound.filter(w=>w.on).length,b=document.getElementById('import-add');b.style.display=importFound.length?'':'none';b.textContent='加入 '+n+' 个词到「'+VOCAB_LEVEL_LABELS[importLevel]+'」';b.disabled=!n;}
+function renderImportPreview(){
+  const box=document.getElementById('import-preview');box.innerHTML='';
+  importFound.forEach(w=>{
+    const row=document.createElement('label');row.style.cssText='display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer;';
+    const cb=document.createElement('input');cb.type='checkbox';cb.checked=w.on;cb.onchange=()=>{w.on=cb.checked;updateImportAdd();};
+    const t=document.createElement('span');t.textContent=w.fr;t.style.cssText='font-family:Fraunces,serif;font-size:16px;min-width:110px;';
+    const g=document.createElement('span');g.textContent=w.g==='m'?'le':w.g==='f'?'la':'—';g.style.cssText='color:var(--accent-gold);width:24px;';
+    const z=document.createElement('span');z.textContent=w.zh;z.style.color='var(--text-dim)';
+    row.append(cb,t,g,z);box.appendChild(row);});
+  updateImportAdd();
+}
+const IMPORT_PROMPT=`这些图片是法语课本或词汇表的照片。请提取其中所有法语单词/短语条目，只输出一个 JSON 数组，每项格式：{"fr":"法语原形","g":"m"或"f"或null,"zh":"简短中文释义"}。规则：1) 名词若标注阳性（m./n.m./le/un）g 填"m"，阴性（f./n.f./la/une）填"f"；图中没标但你确定是名词的性也填上；动词、形容词、副词、短语 g 为 null。2) fr 不含冠词和词性标注。3) 图中有中文释义就用图中的，否则自己给简短中文释义。4) 看不清的跳过，不要猜。`;
+document.getElementById('import-btn').onclick=async()=>{
+  const status=document.getElementById('import-status'),btn=document.getElementById('import-btn');
+  const files=Array.from(document.getElementById('import-file').files||[]);
+  if(!files.length){status.textContent='请先选择或拍摄照片。';return;}
+  let sample=null;try{sample=window.claude?await window.claude.use('sample'):null;}catch(e){}
+  let caps=null;try{if(sample)caps=await sample.limits();}catch(e){}
+  if(!sample||!caps||!caps.images){status.textContent='当前环境不支持在页面里识别图片，可以把照片直接发给 Claude 聊天，让它帮你加词。';return;}
+  btn.disabled=true;status.textContent='识别中…（约 10–40 秒）';
+  try{
+    let res=await sample.json(IMPORT_PROMPT,{images:files.slice(0,caps.images.maxCount||4),cache:false});
+    if(!Array.isArray(res))res=Object.values(res||{}).find(Array.isArray)||[];
+    importFound=res.filter(w=>w&&typeof w.fr==='string'&&w.fr.trim()&&typeof w.zh==='string').map(w=>({fr:w.fr.trim(),g:w.g==='m'||w.g==='f'?w.g:null,zh:w.zh.trim(),on:true}));
+    status.textContent=importFound.length?'识别到 '+importFound.length+' 个词，取消勾选不要的，再点下方加入。':'没有识别到单词，换一张更清晰的照片试试。';
+    renderImportPreview();
+  }catch(e){
+    status.textContent=e&&e.code==='not_granted'?'你没有授权识别，无法使用这个功能。':e&&e.code==='rate_limited'?'请求太频繁，稍等一下再试。':'识别失败（'+((e&&e.code)||'未知错误')+'），可以重试或换张图。';
+  }finally{btn.disabled=false;}
+};
+document.getElementById('import-add').onclick=()=>{
+  let added=0,skipped=0;
+  importFound.filter(w=>w.on).forEach(w=>{
+    if(VOCAB.some(x=>x.fr.toLowerCase()===w.fr.toLowerCase()&&x.lv===importLevel)){skipped++;return;}
+    VOCAB.push({fr:w.fr,g:w.g,zh:w.zh,lv:importLevel,custom:true});added++;});
+  saveCustom();importFound=[];renderImportPreview();document.getElementById('import-file').value='';
+  document.getElementById('import-status').textContent='已加入 '+added+' 个词'+(skipped?'（'+skipped+' 个已存在，跳过）':'')+'，去「练习」就能考到了。';
+};
+
+function showVocabView(name){
+  const map={practice:['btn-vocab-practice','vocab-view-practice'],bank:['btn-vocab-bank','vocab-view-bank'],import:['btn-vocab-import','vocab-view-import']};
+  Object.entries(map).forEach(([k,[b,v]])=>{document.getElementById(b).classList.toggle('active',k===name);document.getElementById(v).style.display=k===name?'':'none';});
+  if(name==='bank')vRenderBank(document.getElementById('vocab-search').value);
+}
+document.getElementById('btn-vocab-practice').onclick=()=>showVocabView('practice');
+document.getElementById('btn-vocab-bank').onclick=()=>showVocabView('bank');
+document.getElementById('btn-vocab-import').onclick=()=>showVocabView('import');
+
+/* ============ INIT ============ */
+(async function init(){
+  await loadMistakes();
+  nextQuestion();
+  loadCustom();
+  vLoad();
+  vNextQuestion();
+})();
+</script>
+</body>
+</html>
